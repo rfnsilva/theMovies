@@ -18,7 +18,7 @@ export default class UserResolver {
 
   //retorna um teste
   @Query(() => User, { nullable: true })
-  public async getUser(@Args('id') id: number): Promise<User> {
+  public async getUser(@Args('id') id: string): Promise<User> {
     return this.repoService.userRepo.findOne(id);
   }
 

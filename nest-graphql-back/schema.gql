@@ -1,0 +1,63 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Favorito {
+  id: String!
+  idFilme: Float!
+  title: String!
+  popularity: Float!
+  vote_count: Float!
+  poster_path: String!
+  backdrop_path: String!
+  original_language: String!
+  original_title: String!
+  overview: String!
+  vote_average: Float!
+  adult: Boolean!
+  video: Boolean!
+  release_date: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  password: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  favoritos: [Favorito!]!
+}
+
+type Query {
+  getUsers: [User!]!
+  getUser(id: String!): User
+}
+
+type Mutation {
+  createUser(data: UserInput!): User!
+  updateFavorite(data: UserUpdateFavoriteInput!): [User!]!
+  deleteUser(data: UserDeleteInput!): [User!]!
+}
+
+input UserInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input UserUpdateFavoriteInput {
+  user_id: String!
+  favorito_id: Float!
+}
+
+input UserDeleteInput {
+  id: String!
+}

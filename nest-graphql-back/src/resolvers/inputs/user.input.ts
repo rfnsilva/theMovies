@@ -51,6 +51,6 @@ export class UserUpdateFavoriteInput {
   readonly user_id: string;
   
   @Field()
-  readonly favorito_id: string;
+  readonly favorito_id: number;
   
 }
