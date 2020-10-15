@@ -2,7 +2,7 @@ import { Args, Context, Mutation, Parent, Query, ResolveField, Resolver } from '
 import RepoService from '../repositorios/repo.service';
 
 import User from '../db/models/User.entity';
-import UserInput, { UserDeleteInput, UserUpdateFavoriteInput } from './inputs/user.input';
+import UserInput, { UserDeleteInput, UserUpdateFavoriteInput, MovieUpdateFavoriteInput } from './inputs/user.input';
 
 //import { context } from 'src/db/loaders'; //dataloader
 
@@ -37,32 +37,44 @@ export default class UserResolver {
   }
 
   //adiciona um favorito
-  @Mutation(() => [User])
+  @Mutation(() => User)
   public async updateFavorite(
-    @Args('data') input: UserUpdateFavoriteInput,
-  ): Promise<User[]> {
+    @Args('data_user') input: UserUpdateFavoriteInput,
+    @Args('data_fav') inputFav: MovieUpdateFavoriteInput,
+  ): Promise<User> {
       const aux = await this.repoService.userRepo.query(`
         select * from "user_favoritos_favorito" where user_id='${input.user_id}'
       `);
 
-      console.log(aux)
-      console.log(aux.length)
-
       for (let i = 0; i < aux.length; i++){
-          if ((input.user_id === aux[i].user_id) && (input.favorito_id === aux[i].favorito_id)) {
-              return aux;
+          if ((input.user_id === aux[i].user_id) && (inputFav.id === aux[i].favorito_id)) {
+              return this.repoService.userRepo.findOne(input.user_id);
           }
       }
-  
+
+      const favorito = this.repoService.favRepo.create({
+        id: inputFav.id,
+        title: inputFav.title,
+        popularity: inputFav.popularity,
+        vote_count: inputFav.vote_count,
+        poster_path: inputFav.poster_path,
+        backdrop_path: inputFav.backdrop_path,
+        original_language: inputFav.original_language,
+        original_title: inputFav.original_title,
+        overview: inputFav.overview,
+        vote_average: inputFav.vote_average,
+        adult: inputFav.adult,
+        video: inputFav.video,
+        release_date: inputFav.release_date,
+      })
+      
+      const fav_criado = await this.repoService.favRepo.save(favorito);
+    
       const user_update = await this.repoService.userRepo.query(`
-          INSERT INTO "user_favoritos_favorito"("user_id", "favorito_id") VALUES ('${input.user_id}', '${input.favorito_id}')  RETURNING "user_id", "favorito_id"
+          INSERT INTO "user_favoritos_favorito"("user_id", "favorito_id") VALUES ('${input.user_id}', '${fav_criado.id}')  RETURNING "user_id", "favorito_id"
       `);
-      console.log(user_update)
 
-    return user_update;
-    /*await this.repoService.userRepo.update(input.id, {...input});
-
-    return this.repoService.userRepo.find({order: {id: 'ASC'}});*/
+    return this.repoService.userRepo.findOne(input.user_id);
 
   }
 

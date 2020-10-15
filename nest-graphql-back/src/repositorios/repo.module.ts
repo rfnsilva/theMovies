@@ -4,12 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import RepoService from './repo.service';
 
 import User from '../db/models/User.entity';
+import Favorito from '../db/models/Favorito.entity';
 
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       User,
+      Favorito
     ]),
   ],
   providers: [RepoService],

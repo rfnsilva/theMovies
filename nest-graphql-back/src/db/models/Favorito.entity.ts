@@ -1,10 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   Column,
+  PrimaryColumn,
 } from 'typeorm';
 
 @ObjectType()
@@ -12,39 +12,35 @@ import {
 export default class Favorito {
   
   @Field()
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
-  @Field()
-  @Column({ name: 'id_filme' })
-  idFilme: number;
+  @PrimaryColumn()
+  id: number;
 
   @Field()
   @Column()
   title: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   popularity: number;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   vote_count: number
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   poster_path: string
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   backdrop_path: string
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   original_language: string
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   original_title: string
 
   /*@Field()
@@ -52,23 +48,23 @@ export default class Favorito {
   genre_ids: number[]*/
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   overview: string
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   vote_average: number
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   adult: boolean
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   video: boolean
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   release_date: string
 
   @Field()

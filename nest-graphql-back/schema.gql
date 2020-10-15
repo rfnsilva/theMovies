@@ -3,8 +3,7 @@
 # ------------------------------------------------------
 
 type Favorito {
-  id: String!
-  idFilme: Float!
+  id: Float!
   title: String!
   popularity: Float!
   vote_count: Float!
@@ -43,7 +42,7 @@ type Query {
 
 type Mutation {
   createUser(data: UserInput!): User!
-  updateFavorite(data: UserUpdateFavoriteInput!): [User!]!
+  updateFavorite(data_fav: MovieUpdateFavoriteInput!, data_user: UserUpdateFavoriteInput!): User!
   deleteUser(data: UserDeleteInput!): [User!]!
 }
 
@@ -53,9 +52,24 @@ input UserInput {
   password: String!
 }
 
+input MovieUpdateFavoriteInput {
+  id: Float!
+  title: String!
+  popularity: Float!
+  vote_count: Float!
+  poster_path: String!
+  backdrop_path: String!
+  original_language: String!
+  original_title: String!
+  overview: String!
+  vote_average: Float!
+  adult: Boolean!
+  video: Boolean!
+  release_date: String!
+}
+
 input UserUpdateFavoriteInput {
   user_id: String!
-  favorito_id: Float!
 }
 
 input UserDeleteInput {
