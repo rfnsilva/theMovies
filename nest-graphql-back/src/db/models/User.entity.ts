@@ -16,7 +16,7 @@ import Favorito from './Favorito.entity'
 export default class User {
   @Field()
   @PrimaryGeneratedColumn("uuid")
-  id: number;
+  id: string;
 
   @Field()
   @Column()

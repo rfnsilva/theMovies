@@ -16,13 +16,13 @@ export default class UserInput {
 @InputType()
 export class UserDeleteInput {
   @Field()
-  readonly id: number;
+  readonly id: string;
 }
 
 @InputType()
 export class UserUpdateInput {
   @Field()
-  readonly id: number;
+  readonly id: string;
   
   @Field()
   readonly name: string;

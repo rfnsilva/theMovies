@@ -13,7 +13,7 @@ export default class Favorito {
   
   @Field()
   @PrimaryGeneratedColumn("uuid")
-  id: number;
+  id: string;
 
   @Field()
   @Column({ name: 'id_filme' })
