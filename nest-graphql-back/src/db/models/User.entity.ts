@@ -30,6 +30,10 @@ export default class User {
   @Column()
   password: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  token: string;
+
   @Field()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

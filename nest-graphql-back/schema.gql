@@ -30,6 +30,7 @@ type User {
   name: String!
   email: String!
   password: String!
+  token: String
   createdAt: DateTime!
   updatedAt: DateTime!
   favoritos: [Favorito!]!
@@ -38,6 +39,12 @@ type User {
 type Query {
   getUsers: [User!]!
   getUser(id: String!): User
+  loginUser(data: loginInput!): User!
+}
+
+input loginInput {
+  email: String!
+  password: String!
 }
 
 type Mutation {

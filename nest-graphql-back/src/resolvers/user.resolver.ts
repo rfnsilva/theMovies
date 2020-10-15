@@ -1,39 +1,82 @@
-import { Args, Context, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import RepoService from '../repositorios/repo.service';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 import User from '../db/models/User.entity';
-import UserInput, { UserDeleteInput, UserUpdateFavoriteInput, MovieUpdateFavoriteInput } from './inputs/user.input';
+import UserInput, { loginInput, UserDeleteInput, UserUpdateFavoriteInput, MovieUpdateFavoriteInput } from './inputs/user.input';
+import { query } from 'express';
 
 //import { context } from 'src/db/loaders'; //dataloader
+
 
 @Resolver(() => User)
 export default class UserResolver {
   constructor(private readonly repoService: RepoService) {}
 
-  //retorna todos os testes
+  //retorna todos os usuarios
   @Query(() => [User])
   public async getUsers(): Promise<User[]> {
     return this.repoService.userRepo.find();
   }
 
-  //retorna um teste
+  //retorna um usuario
   @Query(() => User, { nullable: true })
   public async getUser(@Args('id') id: string): Promise<User> {
     return this.repoService.userRepo.findOne(id);
   }
 
-  //adiciona um teste
+  //adiciona um usuario
   @Mutation(() => User)
   public async createUser(
     @Args('data') input: UserInput,
   ): Promise<User> {
-    const user = this.repoService.userRepo.create({
+    const senhaHash = await bcrypt.hash(input.password, 8);
+
+    const user_create = this.repoService.userRepo.create({
       name: input.name,
       email: input.email,
-      password: input.password,
+      password: senhaHash,
     })
+
+    const user_token = jwt.sign({ senhaHash }, process.env.SECRET, {
+      expiresIn: '1d'
+    });
+
+    let user = await this.repoService.userRepo.save(user_create);
+
+    user.token = user_token;
     
-    return await this.repoService.userRepo.save(user);
+    return user;
+  }
+
+  //loga um usuario
+  @Query(() => User)
+  public async loginUser(
+    @Args('data') input: loginInput,
+  ): Promise<User | undefined> {
+    try {
+      let user = await this.repoService.userRepo.findOne({
+        where: {
+          email: input.email
+        } 
+      });
+      
+      if (await bcrypt.compare(input.password, user.password)) {
+
+        const user_token = jwt.sign({ hash: input.password }, process.env.SECRET, {
+          expiresIn: '1d'
+        });
+
+        user.token = user_token;
+
+      return user;
+    } else {
+        return undefined;
+    }
+    } catch(error){
+      console.log(error)
+    }
   }
 
   //adiciona um favorito
@@ -78,7 +121,7 @@ export default class UserResolver {
 
   }
 
-  //deleta um teste pelo id
+  //deleta um usuario pelo id
   @Mutation(() => [User])
   public async deleteUser(
     @Args('data') input: UserDeleteInput,

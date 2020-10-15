@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import User from '../../db/models/User.entity'
 
 @InputType()
 export default class UserInput {
@@ -50,6 +51,15 @@ export class UserUpdateFavoriteInput {
   @Field()
   readonly user_id: string;
   
+}
+
+@InputType()
+export class loginInput {
+  @Field()
+  readonly email: string;
+
+  @Field()
+  readonly password: string;
 }
 
 @InputType()
