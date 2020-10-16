@@ -1,6 +1,8 @@
 import React, { createContext, useEffect, useState } from 'react';
-import API from '../config/Api';
+import { gql } from 'apollo-boost';
 import { Cookie } from 'next-cookie';
+
+import client from '../services/api'
 
 interface User {
   id: string,
@@ -9,13 +11,21 @@ interface User {
   token: string;
 }
 
+const LOGIN_USER = gql`
+  mutation LoginUser ($email: String!, $password: String!){
+    loginUser(data: { email: $email, password: $password }){
+      email,
+      token
+    }
+  }
+`;
+
 //interface com todos os dados necessarios
 interface AuthContextData {
   signed: boolean;
   user: User | null;
   //signUp(user: object): Promise<object>;
-  //signIn(user: object): Promise<object>;
-  forgot(user: object): Promise<object>;
+  signIn(user: object): Promise<object>;
   signOut(): boolean;
 }
 
@@ -26,7 +36,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  /*useEffect(() => {
+  useEffect(() => {
     async function loadStorageData() {
       const cookie = new Cookie();
       const userCookie: User = cookie.get('user');
@@ -37,7 +47,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
 
     loadStorageData();
-  }, []);*/
+  }, []);
 
   //função que realiza o cadastro
   async function signUp(usuario: object){
@@ -53,22 +63,15 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   //função que realiza o login
-  async function signIn(usuario: object){
-    /*const response = await API.post('/login', usuario);
-    const data = await response.data;
+  async function signIn(usuario: any){
+    const { data } = await client.mutate({
+      variables: { email: usuario.email, password: usuario.password },
+      mutation: LOGIN_USER,
+    })
 
     const cookie = new Cookie();
     cookie.set('user', data);
-
     setUser(data);
-
-    return data;*/
-  }
-
-  //função que realiza o forgot
-  async function forgot(usuario: object){
-    const response = await API.post('/forgot', usuario);
-    const data = await response.data;
 
     return data;
   }
@@ -92,8 +95,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         user,
         signed: !!user,
         //signUp,
-        //signIn,
-        forgot,
+        signIn,
         signOut,
       }}
     >

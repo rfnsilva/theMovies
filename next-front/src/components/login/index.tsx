@@ -1,45 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import client from '../../services/api'
 
 import AuthContext from '../../contexts/Auth';
 
 import { MenuForm, Container, Options } from './styles';
-import { gql } from 'apollo-boost';
 
 interface User {
   email: string,
   password: string
 }
 
-const LOGIN_USER = gql`
-  mutation LoginUser ($email: String!, $password: String!){
-    loginUser(data: { email: $email, password: $password }){
-      email,
-      token
-    }
-  }
-`;
-
 const LoginComponent: React.FC = () => {
   const router = useRouter();
   const [ usuario, setUsuario] = useState<User>(null)
+  const { signIn } = useContext(AuthContext)
 
   //subimit form
   const SubmitForm = async () => {
     try{
-
-      const { data } = await client.mutate({
-        variables: { email: usuario.email, password: usuario.password },
-        mutation: LOGIN_USER,
-      })
+      const data = await signIn(usuario);
 
       if(data){
         router.push('/');
       }
 
-      console.log(data)
     } catch(error){
       console.log(error)
     }

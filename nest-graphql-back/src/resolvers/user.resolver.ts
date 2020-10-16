@@ -54,7 +54,6 @@ export default class UserResolver {
   public async loginUser(
     @Args('data') input: LoginInput,
   ): Promise<User | undefined> {
-    console.log('aqui')
     try {
       let user = await this.repoService.userRepo.findOne({
         where: {
