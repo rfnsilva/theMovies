@@ -39,22 +39,22 @@ type User {
 type Query {
   getUsers: [User!]!
   getUser(id: String!): User
-  loginUser(data: loginInput!): User!
-}
-
-input loginInput {
-  email: String!
-  password: String!
 }
 
 type Mutation {
   createUser(data: UserInput!): User!
+  loginUser(data: LoginInput!): User!
   updateFavorite(data_fav: MovieUpdateFavoriteInput!, data_user: UserUpdateFavoriteInput!): User!
   deleteUser(data: UserDeleteInput!): [User!]!
 }
 
 input UserInput {
   name: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
   email: String!
   password: String!
 }

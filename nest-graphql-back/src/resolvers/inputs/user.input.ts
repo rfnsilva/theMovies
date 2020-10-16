@@ -54,7 +54,7 @@ export class UserUpdateFavoriteInput {
 }
 
 @InputType()
-export class loginInput {
+export class LoginInput {
   @Field()
   readonly email: string;
 

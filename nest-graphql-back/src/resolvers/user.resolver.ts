@@ -4,8 +4,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 import User from '../db/models/User.entity';
-import UserInput, { loginInput, UserDeleteInput, UserUpdateFavoriteInput, MovieUpdateFavoriteInput } from './inputs/user.input';
-import { query } from 'express';
+import UserInput, { LoginInput, UserDeleteInput, UserUpdateFavoriteInput, MovieUpdateFavoriteInput } from './inputs/user.input';
 
 //import { context } from 'src/db/loaders'; //dataloader
 
@@ -53,8 +52,9 @@ export default class UserResolver {
   //loga um usuario
   @Mutation(() => User)
   public async loginUser(
-    @Args('data') input: loginInput,
+    @Args('data') input: LoginInput,
   ): Promise<User | undefined> {
+    console.log('aqui')
     try {
       let user = await this.repoService.userRepo.findOne({
         where: {
@@ -70,10 +70,10 @@ export default class UserResolver {
 
         user.token = user_token;
 
-      return user;
-    } else {
-        return undefined;
-    }
+        return user;
+      } else {
+          return undefined;
+      }
     } catch(error){
       console.log(error)
     }
