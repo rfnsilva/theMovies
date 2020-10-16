@@ -51,7 +51,7 @@ export default class UserResolver {
   }
 
   //loga um usuario
-  @Query(() => User)
+  @Mutation(() => User)
   public async loginUser(
     @Args('data') input: loginInput,
   ): Promise<User | undefined> {

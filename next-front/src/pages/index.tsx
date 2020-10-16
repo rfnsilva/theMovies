@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useSWR from 'swr'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
+import { useQuery, gql } from '@apollo/client';
 
 import { Container } from '../styles/pages/Home';
 import Main from '../components/main'
@@ -26,7 +27,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: { data_populares_tv, data_populares_filmes } }
 }
 
+
+/*
+const EXCHANGE_RATES = gql`
+  query{
+    getUsers{
+      name,
+      id,
+    }
+  }
+`;
+*/
+
 export default function Home({ data_populares_tv, data_populares_filmes }){
+  //const { loading, data } = useQuery(EXCHANGE_RATES);
+
+  //console.log(data)
+
   return (
     <Container>
       <Head>
