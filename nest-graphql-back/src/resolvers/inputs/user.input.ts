@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql';
-import User from '../../db/models/User.entity'
 
 @InputType()
 export default class UserInput {
@@ -67,7 +66,7 @@ export class MovieUpdateFavoriteInput {
   @Field()
   readonly id: number;
 
-  @Field()
+  /*@Field()
   readonly title: string;
 
   @Field()
@@ -101,5 +100,5 @@ export class MovieUpdateFavoriteInput {
   readonly video: boolean;
 
   @Field()
-  readonly release_date: string;
+  readonly release_date: string;*/
 }

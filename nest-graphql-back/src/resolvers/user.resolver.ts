@@ -1,17 +1,22 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { HttpService, Injectable } from '@nestjs/common';
 import RepoService from '../repositorios/repo.service';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 import User from '../db/models/User.entity';
+import Favorito from '../db/models/Favorito.entity';
 import UserInput, { LoginInput, UserDeleteInput, UserUpdateFavoriteInput, MovieUpdateFavoriteInput } from './inputs/user.input';
 
 //import { context } from 'src/db/loaders'; //dataloader
 
-
+@Injectable()
 @Resolver(() => User)
 export default class UserResolver {
-  constructor(private readonly repoService: RepoService) {}
+  constructor(
+    private readonly repoService: RepoService,
+    //private readonly httpService: HttpService
+  ) {}
 
   //retorna todos os usuarios
   @Query(() => [User])
@@ -84,39 +89,75 @@ export default class UserResolver {
     @Args('data_user') input: UserUpdateFavoriteInput,
     @Args('data_fav') inputFav: MovieUpdateFavoriteInput,
   ): Promise<User> {
-      const aux = await this.repoService.userRepo.query(`
-        select * from "user_favoritos_favorito" where user_id='${input.user_id}'
-      `);
+    const aux = await this.repoService.userRepo.query(`
+      select * from "user_favoritos_favorito" where user_id='${input.user_id}'
+    `);
 
-      for (let i = 0; i < aux.length; i++){
-          if ((input.user_id === aux[i].user_id) && (inputFav.id === aux[i].favorito_id)) {
-              return this.repoService.userRepo.findOne(input.user_id);
-          }
-      }
+    for (let i = 0; i < aux.length; i++){
+        if ((input.user_id === aux[i].user_id) && (inputFav.id === aux[i].favorito_id)) {
+            return this.repoService.userRepo.findOne(input.user_id);
+        }
+    }
 
-      const favorito = this.repoService.favRepo.create({
-        id: inputFav.id,
-        title: inputFav.title,
-        popularity: inputFav.popularity,
-        vote_count: inputFav.vote_count,
-        poster_path: inputFav.poster_path,
-        backdrop_path: inputFav.backdrop_path,
-        original_language: inputFav.original_language,
-        original_title: inputFav.original_title,
-        overview: inputFav.overview,
-        vote_average: inputFav.vote_average,
-        adult: inputFav.adult,
-        video: inputFav.video,
-        release_date: inputFav.release_date,
-      })
-      
-      const fav_criado = await this.repoService.favRepo.save(favorito);
+    const http = new HttpService()
+    const response = await http.get('https://api.themoviedb.org/3/movie/528085?api_key=e2e6c0526e3737f2381684d2fd63d354&language=pt-BR').toPromise()
+    const data = await response.data;
+
+    const favorito = this.repoService.favRepo.create({
+      id: inputFav.id,
+      title: data.title,
+      popularity: data.popularity,
+      vote_count: data.vote_count,
+      poster_path: data.poster_path,
+      backdrop_path: data.backdrop_path,
+      original_language: data.original_language,
+      original_title: data.original_title,
+      overview: data.overview,
+      vote_average: data.vote_average,
+      adult: data.adult,
+      video: data.video,
+      release_date: data.release_date,
+    })
     
-      const user_update = await this.repoService.userRepo.query(`
-          INSERT INTO "user_favoritos_favorito"("user_id", "favorito_id") VALUES ('${input.user_id}', '${fav_criado.id}')  RETURNING "user_id", "favorito_id"
-      `);
+    const fav_criado = await this.repoService.favRepo.save(favorito);
+  
+    const user_update = await this.repoService.userRepo.query(`
+        INSERT INTO "user_favoritos_favorito"("user_id", "favorito_id") VALUES ('${input.user_id}', '${fav_criado.id}')  RETURNING "user_id", "favorito_id"
+    `);
 
     return this.repoService.userRepo.findOne(input.user_id);
+
+  }
+
+  //adiciona um favorito
+  @Query(() => [Favorito])
+  public async getFavorites(
+    @Args('data') input: UserUpdateFavoriteInput,
+  ): Promise<Favorito[]> {
+    const aux = await this.repoService.userRepo.query(`
+      select * from "user_favoritos_favorito" where user_id='${input.user_id}'
+    `);
+
+    let string_select: string;
+
+    for(let i = 0; i < aux.length; i++){
+      if(i == 0){
+        string_select = "'" + aux[i].favorito_id + "',"
+      }else{
+        if(i < (aux.length - 1)){
+          string_select += "'" + aux[i].favorito_id + "',"
+        } else {
+          string_select += "'" + aux[i].favorito_id + "'"
+        }
+      }
+
+    }
+
+    const favorites = await this.repoService.userRepo.query(`
+      SELECT * FROM public.favorito WHERE id IN (${string_select})
+    `);
+
+    return favorites;
 
   }
 

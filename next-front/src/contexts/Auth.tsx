@@ -14,8 +14,20 @@ interface User {
 const LOGIN_USER = gql`
   mutation LoginUser ($email: String!, $password: String!){
     loginUser(data: { email: $email, password: $password }){
+      name,
       email,
-      token
+      token,
+      createdAt,
+      favoritos{
+        id,
+        title,
+        popularity,
+        poster_path,
+        backdrop_path,
+        release_date,
+        createdAt,
+        overview
+      }
     }
   }
 `;

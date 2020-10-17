@@ -1,19 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { gql } from 'apollo-boost';
 
 import { Container } from './styles';
 
-export default function Favorite ({ fav }){
+export interface Props {
+  filmeId: object
+  signed?: boolean;
+}
+
+const UPDATE_FAVORITO = gql`
+  mutation UpdateFavorite ($email: String!, $password: String!){
+    updateFavorite(data: { email: $email, password: $password }){
+      name,
+      email,
+      token,
+      createdAt,
+      favoritos{
+        id,
+        title,
+        popularity,
+        poster_path,
+        backdrop_path,
+        release_date,
+        createdAt,
+        overview
+      }
+    }
+  }
+`;
+
+//export default function Favorite ({ fav }){
+const Favorite: React.FC<Props> = ({ filmeId, signed }) => {
   const [ check, setCheck ] = useState<boolean>(false)
 
-  const handleCheckClick = ({ target }) => {
-    console.log(fav)
+  const handleCheckClick = async ({ target }) => {
     setCheck(!check);
-    console.log(check)
+    console.log(filmeId)
     //fazer chamada a api para salvar usuario
+
+    try{
+      const response = await fetch(`http://localhost:3333`);
+      const data = await response.json();
+
+      console.log(data)
+
+    } catch(error){
+      console.log(error)
+    }
   }
+
   //const handleChange = async({ target }) => {
   return (
-    <Container>
+    <Container signed={signed} filmeId={filmeId}>
 
       <label className="heart-switch">
           <input type="checkbox" checked={check} onChange={handleCheckClick}  />
@@ -25,3 +63,4 @@ export default function Favorite ({ fav }){
     </Container>
   );
 }
+export default Favorite;

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -29,7 +29,8 @@ const gqlImports = [
       installSubscriptionHandlers: true,
       context,
     }),
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
+    HttpModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -39,6 +39,11 @@ type User {
 type Query {
   getUsers: [User!]!
   getUser(id: String!): User
+  getFavorites(data: UserUpdateFavoriteInput!): [Favorito!]!
+}
+
+input UserUpdateFavoriteInput {
+  user_id: String!
 }
 
 type Mutation {
@@ -61,22 +66,6 @@ input LoginInput {
 
 input MovieUpdateFavoriteInput {
   id: Float!
-  title: String!
-  popularity: Float!
-  vote_count: Float!
-  poster_path: String!
-  backdrop_path: String!
-  original_language: String!
-  original_title: String!
-  overview: String!
-  vote_average: Float!
-  adult: Boolean!
-  video: Boolean!
-  release_date: String!
-}
-
-input UserUpdateFavoriteInput {
-  user_id: String!
 }
 
 input UserDeleteInput {

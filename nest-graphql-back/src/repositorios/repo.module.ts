@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import RepoService from './repo.service';
 
 import User from '../db/models/User.entity';

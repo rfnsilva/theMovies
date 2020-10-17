@@ -20,27 +20,27 @@ export default class Favorito {
   title: string;
 
   @Field()
-  @Column({ nullable: true })
+  @Column({type: "decimal"})
   popularity: number;
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   vote_count: number
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   poster_path: string
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   backdrop_path: string
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   original_language: string
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   original_title: string
 
   /*@Field()
@@ -48,23 +48,23 @@ export default class Favorito {
   genre_ids: number[]*/
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   overview: string
 
   @Field()
-  @Column({ nullable: true })
+  @Column({type: "decimal"})
   vote_average: number
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   adult: boolean
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   video: boolean
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   release_date: string
 
   @Field()

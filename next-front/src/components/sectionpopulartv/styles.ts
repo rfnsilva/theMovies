@@ -5,13 +5,13 @@ export const Container = styled.div`
   //flex-wrap: wrap;
   grid-area: MA;
   //height: 450px;
-  overflow-x: scroll;
 
   //justify-content: center;
   margin: 35px 16px;
 
   > section {
     display: flex;
+    overflow-x: scroll;
   }
 
   > div {

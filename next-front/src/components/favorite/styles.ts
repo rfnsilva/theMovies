@@ -1,5 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 
+import { Props } from '.'
+
 // Create the keyframes
 const uncheck = keyframes`
   0% {
@@ -32,7 +34,7 @@ const check = keyframes`
   }
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<Props>`
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -51,6 +53,8 @@ export const Container = styled.div`
     &:active {
         --s: .95;
     }
+
+    display: ${(props) => (props.signed ? 'inline' : 'none')};
 
     > input {
       -webkit-appearance: none;

@@ -14,20 +14,6 @@ export default function Main({ data }){
   const [ filmes, setFilmes ] = useState(data.results);
   const [ page, setPage ] = useState<number>(1);
 
-  //paginacao
-  async function Pagination({ target }) {
-    /*try{
-      const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=e2e6c0526e3737f2381684d2fd63d354&language=pt-BR&page=${+target.value}`);
-      const data: Filmes = await response.json();
-
-      setPage(+target.value)
-      setFilmes(data.results)
-
-    } catch(error){
-      console.log(error)
-    }*/
-  };
-
   return (
     <Container>
       <div className="header_section">
@@ -61,25 +47,6 @@ export default function Main({ data }){
         <Card filmes={ filmes } />
       </section>
 
-      {/* <nav aria-label="paginacao">
-        <ul>
-          <li className="page-item">
-            <button onClick={Pagination} value={page - 1} type="submit" className="page-link">Anterior</button>
-          </li>
-          <li className="page-item">
-            <button className="page-link">1</button>
-          </li>
-          <li className="page-item">
-            <button className="page-link">2</button>
-          </li>
-          <li className="page-item">
-            <button className="page-link">3</button>
-          </li>
-          <li className="page-item">
-            <button onClick={Pagination} value={page + 1} type="submit" className="page-link">Próximo</button>
-          </li>
-        </ul>
-      </nav> */}
     </Container>
   );
 }

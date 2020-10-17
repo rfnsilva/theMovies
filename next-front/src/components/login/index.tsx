@@ -20,6 +20,7 @@ const LoginComponent: React.FC = () => {
   const SubmitForm = async () => {
     try{
       const data = await signIn(usuario);
+      console.log(data)
 
       if(data){
         router.push('/');

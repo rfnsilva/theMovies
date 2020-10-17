@@ -3,21 +3,11 @@ import React, { useState } from 'react';
 import { Container } from './styles';
 import Card from '../card';
 
-interface Filmes {
-  page: number
-  results: object[]
-  total_pages: number
-  total_results: number
-}
-
-export default function SectionPopularesTv({ data }){
-  const [ filmes, setFilmes ] = useState(data.results);
-  const [ page, setPage ] = useState<number>(1);
-
+export default function SectionFavorite({ data }){
   return (
     <Container>
       <div className="header_section">
-        <h2>Os Mais Populares TV</h2>
+        <h2>Seus Favoritos</h2>
         <div className="selector_wrap">
           <div className="selector">
 
@@ -36,7 +26,7 @@ export default function SectionPopularesTv({ data }){
       </div>
 
       <section>
-        <Card filmes={ filmes } />
+        <Card filmes={ data.getFavorites } />
       </section>
     </Container>
   );
